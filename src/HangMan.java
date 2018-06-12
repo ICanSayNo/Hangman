@@ -17,11 +17,13 @@ public class HangMan {
 	public static void main(String[] args) throws FileNotFoundException {
 		new HangMan().start();
 	}
-
+	
+	ArrayList<String> allWords = readFile("dictionary.txt");
 	ArrayList<String> wordsUsed = new ArrayList<String>();
+	ArrayList<String> lettersUsed = new ArrayList<String>();
 
 	public void start() {
-		ArrayList<String> allWords = readFile("dictionary.txt");
+		
 		System.out.println("test");
 
 		int lengthOfList = getNumber();
@@ -37,7 +39,7 @@ public class HangMan {
 	public void build() {
 		JFrame f = new JFrame();
 		JPanel p = new JPanel();
-		JTextArea t = new JTextArea();
+		JLabel t = new JLabel();
 		JLabel l = new JLabel();
 		f.add(t);
 		f.add(l);
@@ -48,12 +50,23 @@ public class HangMan {
 			int lives = 9;
 
 			while (lives != 0) {
-
+				t.setText(word(i));
 				l.setText("YOU HAVE " + lives + " LIVES REMAINING");
 			}
 		}
 	}
 
+	public String word(int x) {
+		
+		String word = "";
+		for (int i = 0; i < wordsUsed.get(x).length(); i++) {
+			lettersUsed.contains(wordsUsed.get(x));
+		}
+		
+		
+		return word;
+	}
+	
 	public int getNumber() {
 		int length = 0;
 		while (length == 0) {
