@@ -1,3 +1,5 @@
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,17 +15,24 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-public class HangMan {
+public class HangMan implements KeyListener {
+
 	public static void main(String[] args) throws FileNotFoundException {
 		new HangMan().start();
 	}
-	
+
 	ArrayList<String> allWords = readFile("dictionary.txt");
 	ArrayList<String> wordsUsed = new ArrayList<String>();
 	ArrayList<String> lettersUsed = new ArrayList<String>();
+	JFrame f = new JFrame();
+	JPanel p = new JPanel();
+	JLabel t = new JLabel();
+	JLabel l = new JLabel();
+	int lives = 30;
+	int currentWord;
 
 	public void start() {
-		
+
 		System.out.println("test");
 
 		int lengthOfList = getNumber();
@@ -37,36 +46,35 @@ public class HangMan {
 	}
 
 	public void build() {
-		JFrame f = new JFrame();
-		JPanel p = new JPanel();
-		JLabel t = new JLabel();
-		JLabel l = new JLabel();
+
 		f.add(t);
 		f.add(l);
-		f.setSize(500,200);
-		f.show();
-
-		for (int i = 0; i < wordsUsed.size(); i++) {
-			int lives = 9;
-
-			while (lives != 0) {
-				t.setText(word(i));
-				l.setText("YOU HAVE " + lives + " LIVES REMAINING");
-			}
-		}
+		f.setSize(500, 200);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.addKeyListener(this);
+		f.setVisible(true);
 	}
 
 	public String word(int x) {
-		
 		String word = "";
-		for (int i = 0; i < wordsUsed.get(x).length(); i++) {
-			lettersUsed.contains(wordsUsed.get(x));
+		boolean letterFound;
+		for (char c : wordsUsed.get(x).toCharArray()) {
+			letterFound = false;
+			for (String s : lettersUsed)
+				if (s.equals(c + ""))
+					letterFound = true;
+
+			if (letterFound)
+				word = (word + c + " ");
+
+			else
+				word = word + "_ ";
 		}
-		
-		
+		System.out.println(word);
+
 		return word;
 	}
-	
+
 	public int getNumber() {
 		int length = 0;
 		while (length == 0) {
@@ -104,6 +112,33 @@ public class HangMan {
 			e.printStackTrace();
 		}
 		return words;
+	}
+
+	void detectKey(String x) {
+		if (!lettersUsed.contains(x)) {
+			lettersUsed.add(x);
+			System.out.println(lettersUsed);
+			t.setText(word(currentWord));
+			if (!wordsUsed.get(currentWord).contains(x)) lives--;
+			l.setText("YOU HAVE " + lives + " LIVES REMAINING");
+		}
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		String keyUsed = e.getKeyChar() + "";
+		detectKey(keyUsed);
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
 	}
 
 }
